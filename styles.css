@@ -1,0 +1,57 @@
+/* Basic page styling */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #f0f0f0;
+  }
+  
+  h1 {
+    margin-top: 1rem;
+  }
+  
+  /* Flash text for the chosen country */
+  #flash {
+    margin-top: 1rem;
+    font-size: 2rem;
+    opacity: 0;
+    transition: opacity 0.5s ease-out;
+    /* You can adjust color, etc. */
+  }
+  
+  /* Container for the D3 map */
+  #map {
+    margin-top: 1rem;
+  }
+  
+  /* We'll create an SVG inside #map.
+     Let's size it in main.js so it's responsive to our code. */
+  svg {
+    background: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Tally table styling */
+  table {
+    margin-top: 1rem;
+    border-collapse: collapse;
+    width: 80%;
+    max-width: 600px;
+  }
+  th, td {
+    padding: 8px;
+    border: 1px solid #ccc;
+    text-align: center;
+  }
+  th {
+    background: #eee;
+  }
+  
+  /* Highlighted country class for D3 paths */
+  .country-highlight {
+    fill: orange !important;
+  }
+  

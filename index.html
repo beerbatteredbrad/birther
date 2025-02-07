@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Birth Rate Simulation (Top 100 Countries)</title>
+  <!-- Load D3.js from a CDN -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <!-- Our custom stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>Birth Rate Simulation</h1>
+
+  <!-- Flash message area for the currently chosen country -->
+  <div id="flash"></div>
+
+  <!-- Container for the D3 world map -->
+  <div id="map"></div>
+
+  <!-- Tally table for sorted birth counts -->
+  <table id="tallyTable">
+    <thead>
+      <tr>
+        <th>Country</th>
+        <th>Tally</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Dynamically populated in main.js -->
+    </tbody>
+  </table>
+
+  <!-- Our data (top 100 countries, etc.) -->
+  <script src="data.js"></script>
+  <!-- Main logic to draw the map, handle simulation, etc. -->
+  <script src="main.js"></script>
+</body>
+</html>
