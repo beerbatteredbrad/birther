@@ -9,26 +9,52 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>Birth Rate from Top 100</h1>
+  <div class="container">
+    <header>
+      <h1>Global Birth Rate Simulation</h1>
+      <p class="subtitle">Visualizing births from the top 100 countries</p>
+    </header>
 
-  <!-- Flash message area for the currently chosen country -->
-  <div id="flash"></div>
+    <div class="controls">
+      <label for="speedRange">Simulation Speed: <span id="speedValue">1x</span></label>
+      <input type="range" id="speedRange" min="1" max="500" value="1" step="1">
+    </div>
 
-  <!-- Container for the D3 world map -->
-  <div id="map"></div>
+    <!-- Global Counters -->
+    <div class="global-counters">
+      <div class="counter-box birth-counter">
+        <h3>Global Births</h3>
+        <div id="globalBirths">0</div>
+      </div>
+      <div class="counter-box death-counter">
+        <h3>Global Deaths</h3>
+        <div id="globalDeaths">0</div>
+      </div>
+    </div>
 
-  <!-- Tally table for sorted birth counts -->
-  <table id="tallyTable">
-    <thead>
-      <tr>
-        <th>Country</th>
-        <th>Tally</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Dynamically populated in main.js -->
-    </tbody>
-  </table>
+    <!-- Flash message area for the currently chosen country -->
+    <div id="flash" class="flash-message">Initializing...</div>
+
+    <!-- Container for the D3 world map -->
+    <div id="map"></div>
+
+    <!-- Tally table for sorted birth counts -->
+    <div class="stats-panel">
+      <div class="table-container">
+        <table id="tallyTable">
+          <thead>
+            <tr>
+              <th>Country</th>
+              <th>Tally</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Dynamically populated in main.js -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
   <!-- Our data (top 100 countries, etc.) -->
   <script src="data.js"></script>

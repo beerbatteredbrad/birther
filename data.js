@@ -1,25 +1,24 @@
 // Approximate top 100 countries by annual births.
 // If you have a more accurate or updated dataset, replace here.
 window.BIRTH_DATA = [
-    { country: "India", birthsPerYear: 24500000 },
-    { country: "China", birthsPerYear: 16000000 },
-    { country: "Nigeria", birthsPerYear: 7500000 },
-    { country: "Pakistan", birthsPerYear: 6000000 },
-    { country: "Indonesia", birthsPerYear: 4800000 },
-    { country: "USA", birthsPerYear: 4000000 },
-    { country: "Brazil", birthsPerYear: 2900000 },
-    { country: "Bangladesh", birthsPerYear: 2800000 },
-    { country: "Ethiopia", birthsPerYear: 2600000 },
-    { country: "DR Congo", birthsPerYear: 2500000 },
-    { country: "Mexico", birthsPerYear: 2200000 },
-    { country: "Egypt", birthsPerYear: 2100000 },
-    { country: "Philippines", birthsPerYear: 2000000 },
-    { country: "Vietnam", birthsPerYear: 1600000 },
-    { country: "Tanzania", birthsPerYear: 1600000 },
-    { country: "Turkey", birthsPerYear: 1500000 },
-    { country: "Iran", birthsPerYear: 1400000 },
-    { country: "Russia", birthsPerYear: 1400000 },
-    { country: "Japan", birthsPerYear: 900000 },
+    { "country": "India", "birthsPerYear": 24500000, "cbr": 16.53, "cdr": 9.65, "imr": 35.4 },
+    { "country": "China", "birthsPerYear": 16000000, "cbr": 9.70, "cdr": 7.82, "imr": 11.4 },
+    { "country": "Nigeria", "birthsPerYear": 7500000, "cbr": 34.00, "cdr": 8.52, "imr": 59.8 },
+    { "country": "Pakistan", "birthsPerYear": 6000000, "cbr": 26.01, "cdr": 5.94, "imr": 52.3 },
+    { "country": "Indonesia", "birthsPerYear": 4800000, "cbr": 15.05, "cdr": 6.77, "imr": 20.4 },
+    { "country": "USA", "birthsPerYear": 4000000, "cbr": 12.21, "cdr": 8.42, "imr": 5.3 },
+    { "country": "Brazil", "birthsPerYear": 2900000, "cbr": 10.67, "cdr": 6.90, "imr": 10.5 },
+    { "country": "Bangladesh", "birthsPerYear": 2800000, "cbr": 17.50, "cdr": 5.50, "imr": 28.3 },
+    { "country": "Ethiopia", "birthsPerYear": 2600000, "cbr": 29.97, "cdr": 5.60, "imr": 35.8 },
+    { "country": "DR Congo", "birthsPerYear": 2500000, "cbr": 39.64, "cdr": 7.74, "imr": 64.5 },
+    { "country": "Mexico", "birthsPerYear": 2200000, "cbr": 13.95, "cdr": 7.07, "imr": 10.7 },
+    { "country": "Egypt", "birthsPerYear": 2100000, "cbr": 20.48, "cdr": 4.32, "imr": 17.1 },
+    { "country": "Philippines", "birthsPerYear": 2000000, "cbr": 22.17, "cdr": 6.10, "imr": 20.0 },
+    { "country": "Vietnam", "birthsPerYear": 1600000, "cbr": 15.29, "cdr": 5.77, "imr": 15.7 },
+    { "country": "Turkey", "birthsPerYear": 1500000, "cbr": 14.04, "cdr": 6.09, "imr": 15.8 },
+    { "country": "Iran", "birthsPerYear": 1400000, "cbr": 14.79, "cdr": 5.20, "imr": 14.9 },
+    { "country": "Russia", "birthsPerYear": 1400000, "cbr": 9.22, "cdr": 13.27, "imr": 6.5 },
+    { "country": "Japan", "birthsPerYear": 900000, "cbr": 6.90, "cdr": 11.74, "imr": 1.9 },
     { country: "Sudan", birthsPerYear: 900000 },
     { country: "France", birthsPerYear: 750000 },
     { country: "South Africa", birthsPerYear: 720000 },
@@ -102,10 +101,37 @@ window.BIRTH_DATA = [
   
   // We'll compute total births and attach a probability to each
   (() => {
-    const total = window.BIRTH_DATA.reduce((acc, d) => acc + d.birthsPerYear, 0);
+    // Default global averages for countries where we didn't manually add data
+    const DEFAULT_CBR = 17.0;
+    const DEFAULT_CDR = 7.5;
+    const DEFAULT_IMR = 26.0;
+
+    let totalBirths = 0;
+    let totalDeaths = 0;
+
     window.BIRTH_DATA.forEach(d => {
-      d.probability = d.birthsPerYear / total;
+      // Fill in defaults if missing
+      if (!d.cbr) d.cbr = DEFAULT_CBR;
+      if (!d.cdr) d.cdr = DEFAULT_CDR;
+      if (!d.imr) d.imr = DEFAULT_IMR;
+
+      // Calculate deathsPerYear based on the ratio of CDR to CBR
+      // births = pop * (cbr/1000)  => pop = births / (cbr/1000)
+      // deaths = pop * (cdr/1000)
+      // deaths = (births / cbr) * cdr
+      d.deathsPerYear = Math.round((d.birthsPerYear / d.cbr) * d.cdr);
+
+      totalBirths += d.birthsPerYear;
+      totalDeaths += d.deathsPerYear;
     });
-    window.GLOBAL_TOTAL_BIRTHS = total;
+
+    window.GLOBAL_TOTAL_BIRTHS = totalBirths;
+    window.GLOBAL_TOTAL_DEATHS = totalDeaths;
+
+    // Assign probabilities
+    window.BIRTH_DATA.forEach(d => {
+      d.probability = d.birthsPerYear / totalBirths;
+      d.deathProbability = d.deathsPerYear / totalDeaths;
+    });
   })();
   
