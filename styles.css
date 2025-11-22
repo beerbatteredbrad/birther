@@ -96,6 +96,12 @@ h1 {
   color: #ff4444;
 }
 
+.time-counter div {
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+  font-size: 1.4rem; /* Smaller font to fit the longer format */
+}
+
 input[type=range] {
   cursor: pointer;
 }

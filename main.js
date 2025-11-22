@@ -10,6 +10,8 @@ let speedMultiplier = 1;
 // Global counters
 let sessionBirths = 0;
 let sessionDeaths = 0;
+let totalSimulatedSeconds = 0;
+let lastUpdateTime = Date.now();
 
 // Tally object for the simulation counts
 const countryTally = {};
@@ -34,6 +36,8 @@ document.addEventListener("DOMContentLoaded", () => {
   
   // Start the UI update loop for the table (every 1 second)
   setInterval(updateTallyTable, 1000);
+  
+  lastUpdateTime = Date.now();
   setInterval(updateGlobalCounters, 100); // Update counters more frequently
 });
 
@@ -237,6 +241,29 @@ function highlightCountry(countryName, type) {
 }
 
 function updateGlobalCounters() {
+  const now = Date.now();
+  // Calculate time delta in seconds
+  const dt = (now - lastUpdateTime) / 1000;
+  lastUpdateTime = now;
+
+  // Add to total simulated time
+  totalSimulatedSeconds += dt * speedMultiplier;
+  
+  // Format time
+  const totalSeconds = Math.floor(totalSimulatedSeconds);
+  const days = Math.floor(totalSeconds / (24 * 3600));
+  const hours = Math.floor((totalSeconds % (24 * 3600)) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  const pad = (num) => num.toString().padStart(2, '0');
+  let timeString = `${pad(hours)}h ${pad(minutes)}m ${pad(seconds)}s`;
+  
+  if (days > 0) {
+    timeString = `${days}d ${timeString}`;
+  }
+
+  document.getElementById("simulatedTime").textContent = timeString;
   document.getElementById("globalBirths").textContent = sessionBirths.toLocaleString();
   document.getElementById("globalDeaths").textContent = sessionDeaths.toLocaleString();
 }
