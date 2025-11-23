@@ -239,3 +239,35 @@ tr:hover {
   font-size: 0.8rem;
   color: #ccc;
 }
+
+/* Choropleth legend */
+.choropleth-legend {
+  width: 100%;
+  max-width: 600px;
+  margin: 10px auto 20px auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  color: #ccc;
+  font-size: 0.85rem;
+}
+.choropleth-swatch {
+  width: 36px;
+  height: 16px;
+  border-radius: 2px;
+  border: 1px solid rgba(0,0,0,0.3);
+}
+.choropleth-label {
+  min-width: 80px;
+  text-align: center;
+}
+
+/* Choropleth select styling */
+#choroplethSelect {
+  background: var(--secondary-bg);
+  color: var(--text-color);
+  border: 1px solid #333;
+  padding: 6px 8px;
+  border-radius: 6px;
+}

@@ -18,6 +18,14 @@
     <div class="controls">
       <label for="speedRange">Simulation Speed: <span id="speedValue">1x</span></label>
       <input type="range" id="speedRange" min="1" max="500" value="1" step="1">
+      <label for="choroplethSelect">Choropleth:</label>
+      <select id="choroplethSelect">
+        <option value="none">None</option>
+        <option value="cbr">CBR (births per 1k)</option>
+        <option value="cdr">CDR (deaths per 1k)</option>
+        <option value="imr">IMR (infant deaths per 1k live births)</option>
+        <option value="birthsPerYear">Annual Births (absolute)</option>
+      </select>
     </div>
 
     <!-- Global Counters -->
@@ -41,6 +49,7 @@
 
     <!-- Container for the D3 world map -->
     <div id="map"></div>
+    <div id="choroplethLegend" class="choropleth-legend"></div>
 
     <!-- Tally table for sorted birth counts -->
     <div class="stats-panel">

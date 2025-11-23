@@ -6,6 +6,8 @@ const height = 600;
 let svg = null;
 let path = null;
 let speedMultiplier = 1;
+let currentChoropleth = 'none';
+let choroplethScale = null;
 
 // Global counters
 let sessionBirths = 0;
@@ -28,6 +30,15 @@ document.addEventListener("DOMContentLoaded", () => {
     speedSlider.addEventListener("input", (e) => {
       speedMultiplier = parseInt(e.target.value, 10);
       speedValue.textContent = speedMultiplier + "x";
+    });
+  }
+
+  // Choropleth selector
+  const choroplethSelect = document.getElementById('choroplethSelect');
+  if (choroplethSelect) {
+    choroplethSelect.addEventListener('change', (e) => {
+      currentChoropleth = e.target.value;
+      updateChoropleth(currentChoropleth);
     });
   }
 
@@ -76,6 +87,7 @@ function createMap() {
       .append("path")
       .attr("d", path)
       .attr("class", "country-shape")
+      .attr("data-name", d => d.properties && d.properties.name)
       .on("mouseover", function(event, d) {
         const countryName = d.properties.name;
         const data = getCountryData(countryName);
@@ -94,6 +106,20 @@ function createMap() {
             <div class="stat-row"><span>Death Rate:</span> <span>${data.cdr} / 1k</span></div>
             <div class="stat-row"><span>Infant Mort.:</span> <span>${data.imr} / 1k</span></div>
           `;
+
+          // Add current choropleth metric value if present
+          if (currentChoropleth && currentChoropleth !== 'none') {
+            let label = currentChoropleth;
+            let val = null;
+            if (currentChoropleth === 'cbr') { label = 'CBR'; val = data.cbr; }
+            if (currentChoropleth === 'cdr') { label = 'CDR'; val = data.cdr; }
+            if (currentChoropleth === 'imr') { label = 'IMR'; val = data.imr; }
+            if (currentChoropleth === 'birthsPerYear') { label = 'Annual Births'; val = data.birthsPerYear; }
+            if (val != null) {
+              content += `<hr style="border: 0; border-top: 1px solid #444; margin: 5px 0;"></hr>`;
+              content += `<div class="stat-row"><span>${label}:</span> <span>${formatMetricValue(val, currentChoropleth)}</span></div>`;
+            }
+          }
         } else {
           content += `<div class="stat-row"><span>No data available</span></div>`;
         }
@@ -113,10 +139,109 @@ function createMap() {
       });
 
     // Once the map is drawn, start the simulation
+    computeDerivedMetrics();
+    updateChoropleth(currentChoropleth);
     updateTallyTable();
     scheduleNextFlash(); // Births
     scheduleNextDeath(); // Deaths
   });
+}
+
+// Compute derived metrics such as estimated population from births and cbr
+const METRIC_MAP = {};
+function computeDerivedMetrics() {
+  window.BIRTH_DATA.forEach(d => {
+    // estimate population = births / (cbr/1000)
+    const pop = d.cbr > 0 ? (d.birthsPerYear * 1000 / d.cbr) : null;
+    METRIC_MAP[d.country] = {
+      cbr: d.cbr,
+      cdr: d.cdr,
+      imr: d.imr,
+      birthsPerYear: d.birthsPerYear,
+      population: pop
+    };
+  });
+}
+
+function updateChoropleth(metric) {
+  // Remove legend if none
+  const legendDiv = document.getElementById('choroplethLegend');
+  legendDiv.innerHTML = '';
+
+  if (!metric || metric === 'none') {
+    // reset fills
+    svg.selectAll('path.country-shape').style('fill', null);
+    return;
+  }
+
+  // Build value list
+  const values = window.BIRTH_DATA.map(d => {
+    if (metric === 'cbr') return d.cbr;
+    if (metric === 'cdr') return d.cdr;
+    if (metric === 'imr') return d.imr;
+    if (metric === 'birthsPerYear') return d.birthsPerYear;
+    return null;
+  }).filter(v => v != null && !isNaN(v));
+
+  if (values.length === 0) return;
+
+  const minV = d3.min(values);
+  const maxV = d3.max(values);
+
+  // Use a sequential color scale
+  choroplethScale = d3.scaleSequential(d3.interpolateOrRd).domain([minV, maxV]);
+
+  // Apply colors to map
+  svg.selectAll('path.country-shape')
+    .style('fill', function(d) {
+      const geoName = d.properties && d.properties.name;
+      if (!geoName) return null;
+      const data = getCountryData(geoName);
+      if (!data) return null;
+      let v = null;
+      if (metric === 'cbr') v = data.cbr;
+      if (metric === 'cdr') v = data.cdr;
+      if (metric === 'imr') v = data.imr;
+      if (metric === 'birthsPerYear') v = data.birthsPerYear;
+      if (v == null || isNaN(v)) return null;
+      return choroplethScale(v);
+    });
+
+  // Create a simple 5-stop legend
+  const steps = 5;
+  const stepVals = [];
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;
+    stepVals.push(minV + t * (maxV - minV));
+  }
+
+  stepVals.forEach(v => {
+    const sw = document.createElement('div');
+    sw.className = 'choropleth-swatch';
+    sw.style.background = choroplethScale(v);
+    legendDiv.appendChild(sw);
+  });
+
+  const label = document.createElement('div');
+  label.className = 'choropleth-label';
+  label.textContent = `${metric}  `;
+  legendDiv.appendChild(label);
+
+  // Add numeric labels (min / max)
+  const minLabel = document.createElement('div');
+  minLabel.className = 'choropleth-label';
+  minLabel.textContent = formatMetricValue(minV, metric);
+  legendDiv.appendChild(minLabel);
+
+  const maxLabel = document.createElement('div');
+  maxLabel.className = 'choropleth-label';
+  maxLabel.textContent = formatMetricValue(maxV, metric);
+  legendDiv.appendChild(maxLabel);
+}
+
+function formatMetricValue(v, metric) {
+  if (metric === 'birthsPerYear') return Math.round(v).toLocaleString();
+  return Number(v).toFixed(2);
 }
 
 function getCountryData(geoName) {
