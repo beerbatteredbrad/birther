@@ -12,13 +12,22 @@ A real-time visualization of global birth and death rates using D3.js. This proj
 *   **Global Counters:** 
     *   **Simulated Time:** Tracks the elapsed time in the simulation (Hours, Minutes, Seconds).
     *   **Global Births & Deaths:** Running totals for the current session.
+*   **Live Tally Table:** A real-time leaderboard showing which countries have had the most simulated births in the current session.
 *   **Simulation Controls:** 
     *   **Speed Slider:** Accelerate time from 1x up to 500x to visualize patterns more quickly.
+    *   **Choropleth Maps:** Visualize global data distributions for Crude Birth Rate (CBR), Crude Death Rate (CDR), Infant Mortality Rate (IMR), and Annual Births.
 *   **Responsive Design:** Works on various screen sizes with a modern dark theme.
+
+## Technologies Used
+
+*   **D3.js (v7):** For rendering the interactive SVG map and handling data visualizations.
+*   **HTML5 & CSS3:** For the layout, responsive design, and dark mode styling.
+*   **JavaScript (ES6+):** For the simulation logic, Poisson process calculations, and DOM manipulation.
+*   **GeoJSON:** World map data sourced from [D3 Graph Gallery](https://github.com/holtzy/D3-graph-gallery).
 
 ## How It Works
 
-1.  **Data:** We use a dataset of the top 100 countries by annual birth count, enriched with Crude Birth Rates (CBR), Crude Death Rates (CDR), and Infant Mortality Rates (IMR).
+1.  **Data:** We use a dataset of approximately 100 countries, prioritizing those with the highest annual birth counts. This data is enriched with Crude Birth Rates (CBR), Crude Death Rates (CDR), and Infant Mortality Rates (IMR).
 2.  **Probability:** Each country is assigned probability weights for births and deaths based on their share of the global totals.
 3.  **Timing:** The time between events is calculated using an exponential distribution (Poisson process), ensuring the randomness feels natural and mathematically accurate.
 4.  **Visualization:** D3.js renders the world map and handles the DOM updates for the flashing effects.
