@@ -4,7 +4,7 @@ window.BIRTH_DATA = [
     // Top 200 countries by annual births, with actual country names and demographic data
     {"country":"India","birthsPerYear":23420000,"cbr":16.53,"cdr":9.65,"imr":35.4},
     {"country":"China","birthsPerYear":13680000,"cbr":9.7,"cdr":7.82,"imr":9.89},
-    {"country":"United States","birthsPerYear":4150000,"cbr":12.21,"cdr":8.42,"imr":5.82},
+    {"country":"USA","birthsPerYear":3596000,"cbr":10.7,"cdr":9.2,"imr":5.6},
     {"country":"Indonesia","birthsPerYear":4280000,"cbr":15.05,"cdr":6.77,"imr":18.91},
     {"country":"Pakistan","birthsPerYear":6290000,"cbr":26.01,"cdr":5.94,"imr":61.33},
     {"country":"Nigeria","birthsPerYear":7610000,"cbr":34.00,"cdr":8.52,"imr":62.14},
@@ -21,7 +21,7 @@ window.BIRTH_DATA = [
     {"country":"Iran","birthsPerYear":1270000,"cbr":14.79,"cdr":5.20,"imr":12.82},
     {"country":"Turkey","birthsPerYear":1200000,"cbr":14.04,"cdr":6.09,"imr":8.90},
     {"country":"Germany","birthsPerYear":753000,"cbr":9.02,"cdr":11.97,"imr":3.19},
-    {"country":"United Kingdom","birthsPerYear":749000,"cbr":10.80,"cdr":9.81,"imr":3.76},
+    {"country":"UK","birthsPerYear":749000,"cbr":10.80,"cdr":9.81,"imr":3.76},
     {"country":"France","birthsPerYear":793000,"cbr":11.56,"cdr":9.51,"imr":3.03},
     {"country":"Tanzania","birthsPerYear":2240000,"cbr":32.90,"cdr":5.02,"imr":41.21},
     {"country":"Thailand","birthsPerYear":661000,"cbr":10.04,"cdr":7.86,"imr":2.11},

@@ -342,7 +342,6 @@ function flashCountry(isBirth) {
 function highlightCountry(countryName, type) {
   // We rely on the "properties.name" from the geojson file.
   const nameFixes = {
-    "USA": "United States of America",
     "UK": "United Kingdom",
     "DR Congo": "Democratic Republic of the Congo",
     "Russia": "Russian Federation"
